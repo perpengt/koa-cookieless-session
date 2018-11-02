@@ -1,0 +1,9 @@
+{
+  "extends": [ "tslint:latest", "tslint-config-standard" ],
+  "rules": {
+    "no-implicit-dependencies": false,
+    "object-literal-sort-keys": false,
+    "no-bitwise": false,
+    "interface-name": false
+  }
+}
