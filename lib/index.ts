@@ -1,7 +1,25 @@
 import Koa, { Context } from 'koa'
 import { extendContext, getSessionContext } from './context'
+import GenericSessionStore from './generic_session_store'
 import MemoryStore from './memory_store'
 import { SessionOpts } from './opts'
+import Session from './session'
+import { Store } from './store'
+
+// Exports
+export {
+  Session,
+  SessionOpts,
+  Store,
+  MemoryStore,
+  GenericSessionStore
+}
+
+declare module 'koa' {
+  interface Context {
+    getSession (sessID: string): Promise<Session>
+  }
+}
 
 const session = (app: Koa, opts?: Partial<SessionOpts>) => {
   const _opts = {

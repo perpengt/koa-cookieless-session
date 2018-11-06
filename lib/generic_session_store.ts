@@ -2,7 +2,7 @@ import { SessionStore } from 'koa-generic-session'
 import { SessionOpts } from './opts'
 import { Store } from './store'
 
-export class GenericSessionStore implements Store {
+export default class GenericSessionStore implements Store {
   private store: SessionStore
 
   constructor (store: SessionStore) {
