@@ -1,62 +1,17 @@
 # koa-cookieless-session
-`Currently in development`
 
-Cookieless session library for API Servers; Compatible with koa-sessions' external store.
+Cookieless session library for API Servers.
+
+Compatible with koa-session external store and koa-generic-session external store.
 
 This library was developed with reference to the source code of koa-session.
 
 # Usage
 
-TypeScript
+See [Example/index.ts](examples/index.ts).
 
-```typescript
-import Koa, { Context } from 'koa'
-import session from 'koa-cookieless-session'
+# License
 
-const app = new Koa()
+MIT License
 
-app.use(session({
-  ...configs
-}))
-
-app.use((ctx: Context) => {
-  const session = ctx.getSession<{ views: number }>('some-id')
-  
-  let n = session.views || 0
-  session.views = ++n
-  
-  session.save()
-  
-  ctx.body = n + ' views'
-})
-
-app.listen(3000)
-console.log('listening on port 3000')
-```
-
-JavaScript
-
-```javascript
-const Koa = require('koa')
-const session = require('koa-cookieless-session')
-
-const app = new Koa()
-
-app.use(session({
-  ...configs
-}))
-
-app.use((ctx) => {
-  const session = ctx.getSession('some-id')
-  
-  let n = session.views || 0
-  session.views = ++n
-  
-  session.save()
-  
-  ctx.body = n + ' views'
-})
-
-app.listen(3000)
-console.log('listening on port 3000')
-```
+(c) WithmeToday
