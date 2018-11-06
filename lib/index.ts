@@ -21,7 +21,7 @@ const session = (app: Koa, opts?: Partial<SessionOpts>) => {
       throw e
     } finally {
       if (_opts.autoCommit) {
-
+        await sessCtx.commit()
       }
     }
   }

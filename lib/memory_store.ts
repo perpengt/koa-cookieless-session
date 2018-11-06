@@ -1,6 +1,11 @@
+/* tslint:disable:no-console */
+
 import { Store } from './store'
 
 const sessions: { [key: string]: any } = {}
+
+/* tslint:disable-next-line:no-console */
+console.log('[WARN] MemoryStore should not be used in a production.')
 
 export default class MemoryStore implements Store {
   public async get (key: string) {
@@ -8,8 +13,9 @@ export default class MemoryStore implements Store {
   }
 
   public async set (key: string, value: any) {
+    console.log(`key: ${key}, value: ${JSON.stringify(value)}`)
     if (value === undefined) {
-      this.destroy(key)
+      await this.destroy(key)
       return
     }
     sessions[key] = value

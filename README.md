@@ -20,7 +20,7 @@ app.use(session({
 }))
 
 app.use((ctx: Context) => {
-  const session = ctx.session<{ views: number }>('some-id')
+  const session = ctx.getSession<{ views: number }>('some-id')
   
   let n = session.views || 0
   session.views = ++n
@@ -47,7 +47,7 @@ app.use(session({
 }))
 
 app.use((ctx) => {
-  const session = ctx.session('some-id')
+  const session = ctx.getSession('some-id')
   
   let n = session.views || 0
   session.views = ++n

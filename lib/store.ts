@@ -1,5 +1,4 @@
 import { SessionOpts } from './opts'
-import Session from './session'
 
 export interface Store {
   /**
@@ -9,7 +8,7 @@ export interface Store {
     key: string,
     maxAge: SessionOpts['maxAge'],
     data: { rolling: SessionOpts['rolling'] }
-  ): any
+  ): Promise<object>
 
   /**
    * set session object for key, with a maxAge (in ms)
@@ -19,10 +18,10 @@ export interface Store {
     sess: any,
     maxAge: SessionOpts['maxAge'],
     data: { changed: boolean; rolling: SessionOpts['rolling'] }
-  ): any
+  ): Promise<void>
 
   /**
    * destroy session for key
    */
-  destroy (key: string): any
+  destroy (key: string): Promise<void>
 }
