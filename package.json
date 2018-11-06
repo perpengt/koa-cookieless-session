@@ -1,6 +1,6 @@
 {
   "name": "koa-cookieless-session",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Cookieless Session for Koa",
   "main": "dist/index.js",
   "directories": {
