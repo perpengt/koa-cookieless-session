@@ -4,6 +4,11 @@ interface SessionMethods {
 
 class Session {
   public sessID: string
+  private _removed: boolean = false
+
+  public get removed () {
+    return this._removed
+  }
 
   constructor (sessID: string) {
     this.sessID = sessID
@@ -12,11 +17,15 @@ class Session {
   public toJSON () {
     const json: { [key: string]: any } = {}
 
-    Object.keys(this).forEach((key) => {
-      json[key] = this[key]
-    })
+    Object.keys(this)
+      .filter((key) => !key.startsWith('_'))
+      .forEach((key) => { json[key] = this[key] })
 
     return json
+  }
+
+  public remove () {
+    this.isRemoved = true
   }
 }
 

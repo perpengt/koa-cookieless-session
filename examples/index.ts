@@ -14,10 +14,18 @@ app.use(async (ctx: Context) => {
 
   const sess = await ctx.getSession(ctx.path)
 
+  if (ctx.path === '/not-modify') {
+    if (sess.views == null) {
+      sess.views = 500
+    }
+    ctx.body = `Always ${sess.views} views`
+    return
+  }
+
   let n = sess.views || 0
   sess.views = ++n
 
-  ctx.body = n + ' views'
+  ctx.body = `${n} view${n === 1 ? '' : 's'}`
 })
 
 app.listen(3000)

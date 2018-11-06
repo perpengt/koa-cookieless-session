@@ -1,12 +1,11 @@
 import { BaseContext, Context } from 'koa'
-import _ from 'lodash'
+import generateHash from 'object-hash'
 import { SessionOpts } from './opts'
 import Session from './session'
 import { Store } from './store'
 
 const CTX_SESS_KEY = '__ctx_sess__'
 const TMP_SESS_KEY = '__ctx_sess_tmp__'
-const CTX_SESS_MAP = '__ctx_sess_map__'
 
 export default class SessionContext {
   private ctx: Context
@@ -16,17 +15,13 @@ export default class SessionContext {
   private sessList: {
     [sessID: string]: {
       sess: Session
-      isUnset?: boolean
+      hash: string
     }
   } = {}
 
-  private get app () {
-    return this.ctx.app
-  }
-
   constructor (ctx: Context, opts: SessionOpts) {
     this.ctx = ctx
-    this.opts = _.clone(opts)
+    this.opts = opts
 
     this.store = typeof opts.store === 'function'
       ? opts.store()
@@ -40,9 +35,9 @@ export default class SessionContext {
         return sess
       }
       : async () => {
-        const json = await this.store.get(sessID, this.opts.maxAge, { rolling: this.opts.rolling })
+        const json = await this.store.get(sessID)
         const sess = this.create(sessID, json)
-        this.sessList[sessID] = { sess }
+        this.sessList[sessID] = { sess, hash: generateHash(json || {}) }
         return sess
       }
     return sessFn()
@@ -54,10 +49,21 @@ export default class SessionContext {
         continue
       }
 
-      const { sess } = this.sessList[sessID]
+      const { sess, hash } = this.sessList[sessID]
+
+      if (sess.removed) {
+        await this.remove(sessID)
+        return
+      }
+
       const json = sess.toJSON()
 
-      await this.store.set(sessID, json, this.opts.maxAge, { changed: true, rolling: this.opts.rolling })
+      // Not modified, skip.
+      if (generateHash(json) === hash) {
+        return
+      }
+
+      await this.store.set(sessID, json, this.opts.maxAge)
     }
   }
 
@@ -72,6 +78,10 @@ export default class SessionContext {
     }
 
     return sess
+  }
+
+  private async remove (sessID: string) {
+    await this.store.destroy(sessID)
   }
 }
 
