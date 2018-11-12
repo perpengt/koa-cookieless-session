@@ -16,6 +16,9 @@ export {
 }
 
 declare module 'koa' {
+  interface BaseContext {
+    getSession (sessID: string): Promise<Session>
+  }
   interface Context {
     getSession (sessID: string): Promise<Session>
   }
